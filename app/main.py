@@ -4,20 +4,9 @@ import base64
 from parser import extract_text_from_pdf, extract_text_from_docx
 from analyzer import calculate_score
 
-# Font Awesome CDN
 st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">', unsafe_allow_html=True)
 
-# Page configuration
-st.set_page_config(
-    page_title="CV Quality Checker",
-    page_icon="📄",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
-# Özel CSS
-
-# Title and Description
 st.markdown("""
     <div class='header'>
         <h1><i class="fas fa-file-invoice"></i> CV Quality Checker</h1>
@@ -38,10 +27,10 @@ with st.container():
 
 if uploaded_file is not None:
     with st.spinner('Analyzing your CV, please wait...'):
-        # Dosya içeriğini oku
+        # read file description
         file_bytes = BytesIO(uploaded_file.read())
 
-        # Dosya türüne göre metni çıkar
+        # Expert text for file type
         try:
             if uploaded_file.name.lower().endswith(".pdf"):
                 raw_text = extract_text_from_pdf(file_bytes)

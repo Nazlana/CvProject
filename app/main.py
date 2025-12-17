@@ -236,8 +236,3 @@ with st.sidebar:
             </div>
         </div>
     """, unsafe_allow_html=True)
-        
-        
-    </div>
-    """
-    st.markdown(sidebar_content, unsafe_allow_html=True)

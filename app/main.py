@@ -4,9 +4,89 @@ import base64
 from parser import extract_text_from_pdf, extract_text_from_docx
 from analyzer import calculate_score
 
-st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">', unsafe_allow_html=True)
+# Sayfa ayarları
+st.set_page_config(
+    page_title="CV Quality Checker",
+    page_icon="📄",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
+# Özel CSS ekle
+st.markdown('''
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Ana içerik düzeni */
+        .main .block-container {
+            padding: 2rem 2rem 2rem 3rem;
+            max-width: 100%;
+        }
+        
+        /* Sidebar genişliği */
+        section[data-testid="stSidebar"] {
+            width: 300px !important;
+            min-width: 300px !important;
+            padding: 1.5rem;
+            background: #f8f9fa;
+        }
+        
+        /* Header stilleri */
+        .header {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f0f7ff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2e4bb4;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Kart stilleri */
+        .score-card, .section-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Buton stilleri */
+        .stButton>button {
+            width: 100%;
+            margin: 5px 0;
+            background-color: #2e4bb4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+        }
+        
+        .stButton>button:hover {
+            background-color: #1e3a8a;
+        }
+        
+        /* Sekme stilleri */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 10px;
+        }
+        
+        /* Responsive düzen */
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding: 1rem;
+            }
+            section[data-testid="stSidebar"] {
+                width: 250px !important;
+                min-width: 250px !important;
+            }
+        }
+    </style>
+''', unsafe_allow_html=True)
 
+# Header
 st.markdown("""
     <div class='header'>
         <h1><i class="fas fa-file-invoice"></i> CV Quality Checker</h1>
@@ -16,14 +96,15 @@ st.markdown("""
 
 # File Upload Section
 with st.container():
-    st.markdown("""<h3><i class="fas fa-upload"></i> Upload Your CV</h3>""", unsafe_allow_html=True)
+    st.markdown("""<h3 style='color: #2e4bb4;'><i class="fas fa-upload"></i> Upload Your CV</h3>""", unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
         "Upload CV",
         type=["pdf", "docx"],
         key="file_uploader",
         label_visibility="collapsed"
     )
-    st.info("Drag and drop or click to upload your CV. Only PDF and DOCX formats are supported.", icon="ℹ️")
+    if not uploaded_file:
+        st.info("Drag and drop or click to upload your CV. Only PDF and DOCX formats are supported.", icon="ℹ️")
 
 if uploaded_file is not None:
     with st.spinner('Analyzing your CV, please wait...'):
@@ -121,11 +202,12 @@ if uploaded_file is not None:
             st.stop()
 
 # Sidebar
+# Sidebar content
 with st.sidebar:
-    sidebar_content = """
-    <div class="custom-sidebar">
-        <div class="sidebar-header"><h2 style="font-size:28px; line-height:1.2; margin:0;"><i class="fas fa-info-circle" style="color:#2e4bb4;"></i> Information</h2>
-        <p>This application checks the key sections of your CV and provides improvement suggestions.
+    st.markdown("""
+    <div style='margin-bottom: 2rem;'>
+        <h2 style='color: #2e4bb4; margin-bottom: 1rem;'><i class='fas fa-info-circle'></i> Information</h2>
+        <p style='font-size: 1rem; line-height: 1.6;'>This application checks the key sections of your CV and provides improvement suggestions.
         <p><div class="sidebar-header"><h3 style="font-size:22px; line-height:1.2; margin:0;"><i class="fas fa-tasks" style="color:#2e4bb4;"></i>   What's Checked:</h3></div></p>
         <p><div class="sidebar-item"><i class="fas fa-graduation-cap"></i> Education Information</div></p>
         <p><div class="sidebar-item"><i class="fas fa-briefcase"></i> Work Experience</div></p>
@@ -135,6 +217,25 @@ with st.sidebar:
         <p><div class="sidebar-item"><i class="fas fa-search-plus"></i> Review the analysis results</div></p>
         <p><div class="sidebar-item"><i class="fas fa-edit"></i> Update your CV based on suggestions</div></p>
         <p><div class="sidebar-item"><i class="fas fa-shield-alt"></i><b>Privacy Note:</b> Your uploaded files are not stored on our servers.</div></p> </p>
+        
+        
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+        <div style='margin-top: 2rem;'>
+            <h3 style='color: #2e4bb4; margin-bottom: 1rem;'><i class='fas fa-question-circle'></i> How It Works</h3>
+            <ol style='padding-left: 1.2rem; margin-bottom: 1.5rem; line-height: 1.8;'>
+                <li>Upload your CV in PDF or DOCX format</li>
+                <li>Wait for the analysis to complete</li>
+                <li>Review your CV score and suggestions</li>
+                <li>Download the analysis results</li>
+            </ol>
+            <div style='background: #e6f0ff; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;'>
+                <h4 style='margin-top: 0; color: #2e4bb4;'><i class='fas fa-lightbulb'></i> Tip</h4>
+                <p style='margin-bottom: 0;'>For best results, make sure your CV includes clear section headings like 'Education', 'Experience', and 'Skills'.</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
         
         
     </div>
